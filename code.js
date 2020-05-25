@@ -64,22 +64,6 @@ function createPDF(firstName, lastName, balance, pdfName, doc_id, folder_temp_id
 }
 
 
-function test(){
-var data = sheet.getRange(2, 1, sheet.getLastRow()-1, 6).getValues();
-  data.forEach((item, index) => {
-               
-               var currentDate = Utilities.formatDate(new Date(), "GMT+3", "Дата dd.MM.yyyy\nВремя HH:mm:ss:SSS");
-               item.splice(0, 2)
-               item.unshift(true, "Отправлено")
-               sheet.getRange(index+2, 2)
-               .setValue(item[1])
-               .setNote(currentDate)
-               .setFontColor('green')
-               })
-               console.log(data)
-               
-}
-
 function filesFolder(){
   var pdfFolder = DriveApp.getFolderById(folder_pdf_id);
   var files = pdfFolder.getFiles();
