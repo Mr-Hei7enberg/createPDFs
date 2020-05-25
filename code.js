@@ -6,26 +6,38 @@ const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("dataBase");
 function createBulkPDFs() {
   
   var data = sheet.getRange(2, 1, sheet.getLastRow()-1, 6).getValues();
+  var result = data.filter( // Фильтруем массив на пустые ячейки и флажок
+    function(item){
+      if (item[4] === true) {
+        return !item.some(function(cell) {
+          return cell === "";
+        })
+      }
+    });
   
   data.forEach((item, index) => {
+               
                try{
                
-               createPDF(item[3], item[4], item[5], item[3] + " " + item[4], doc_id, folder_temp_id, folder_pdf_id) 
+               if (item[0] === true){
+    
+               createPDF(item[3], item[4], item[5], item[3] + " " + item[4], doc_id, folder_temp_id, folder_pdf_id);
   
-        var currentDate = Utilities.formatDate(new Date(), "GMT+3", "Дата dd.MM.yyyy\nВремя HH:mm:ss:SSS");
+  var currentDate = Utilities.formatDate(new Date(), "GMT+3", "Дата dd.MM.yyyy\nВремя HH:mm:ss:SSS");
                item.splice(0, 2)
                item.unshift(true, "Файл создан")
                sheet.getRange(index+2, 2)
                .setValue(item[1])
                .setNote(currentDate)
                .setFontColor('green')
-               } catch(err){
+                 } // End if (data[0] == true){
+               } catch(err) {
                sheet.getRange(index+2, 2)
                .setValue("Ошибка")
                .setNote(err)
                .setFontColor('red')
-               }
-           })
+               } // End catch(err)
+           }) // End forEach
 
            
 
@@ -51,6 +63,22 @@ function createPDF(firstName, lastName, balance, pdfName, doc_id, folder_temp_id
   
 }
 
+
+function test(){
+var data = sheet.getRange(2, 1, sheet.getLastRow()-1, 6).getValues();
+  data.forEach((item, index) => {
+               
+               var currentDate = Utilities.formatDate(new Date(), "GMT+3", "Дата dd.MM.yyyy\nВремя HH:mm:ss:SSS");
+               item.splice(0, 2)
+               item.unshift(true, "Отправлено")
+               sheet.getRange(index+2, 2)
+               .setValue(item[1])
+               .setNote(currentDate)
+               .setFontColor('green')
+               })
+               console.log(data)
+               
+}
 
 function filesFolder(){
   var pdfFolder = DriveApp.getFolderById(folder_pdf_id);
